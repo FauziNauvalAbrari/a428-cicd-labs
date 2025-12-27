@@ -1,5 +1,14 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'node:18-alpine'
+      args '-u root'
+    }
+  }
+
+  environment {
+    NODE_OPTIONS = '--openssl-legacy-provider'
+  }
 
   stages {
     stage('Install Dependencies') {
@@ -10,11 +19,9 @@ pipeline {
 
     stage('Build') {
       steps {
-        sh '''
-          export NODE_OPTIONS=--openssl-legacy-provider
-          npm run build
-        '''
+        sh 'npm run build'
       }
     }
   }
 }
+
